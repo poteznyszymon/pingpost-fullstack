@@ -9,7 +9,7 @@ interface UserTileProps {
 
 const UserTile = ({ user }: UserTileProps) => {
   return (
-    <div className="flex gap-5 items-center">
+    <div className="flex gap-3 items-center">
       <Link to={`/profile/${user.username}`} className="flex-shrink-0">
         <UserAvatar avatarUrl={user.profileImg} />
       </Link>
@@ -21,7 +21,7 @@ const UserTile = ({ user }: UserTileProps) => {
         </Link>
         <p className="text-xs text-muted-foreground">@{user.username}</p>
       </div>
-      <FollowButton className="ml-auto" />
+      <FollowButton className="ml-auto h-9 text-sm" />
     </div>
   );
 };

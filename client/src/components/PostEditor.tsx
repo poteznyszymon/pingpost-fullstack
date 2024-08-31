@@ -66,7 +66,7 @@ const PostEditor = () => {
             />
           </div>
         </label>
-        <LoadingButton disabled={!userInput} loading={false}>
+        <LoadingButton disabled={!userInput && !img} loading={false}>
           Post
         </LoadingButton>
       </div>
