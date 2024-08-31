@@ -23,13 +23,16 @@ const PostEditor = () => {
           className="max-h-[20rem] rounded-2xl px-5 py-2 resize-none h-auto"
         />
       </div>
-      <div className="flex justify-end pt-5 items-center gap-5 cursor-pointer">
-        <div
-          className="hover:bg-primary/10 rounded-full p-2 "
-          title="Add photo"
-        >
-          <Image className="text-primary size-5" />
-        </div>
+      <div className="flex justify-end pt-5 items-center gap-5 ">
+        <label htmlFor="image-input">
+          <div
+            className="hover:bg-primary/10 rounded-full p-2 cursor-pointer "
+            title="Add photo"
+          >
+            <Image className="text-primary size-5" />
+            <input id="image-input" hidden type="file" />
+          </div>
+        </label>
         <LoadingButton disabled={!userInput} loading={false}>
           Post
         </LoadingButton>
