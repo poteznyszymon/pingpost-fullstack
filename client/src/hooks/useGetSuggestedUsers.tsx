@@ -9,7 +9,6 @@ const useGetSuggestedUsers = () => {
         const res = await fetch("/api/users/get-suggested");
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);

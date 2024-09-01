@@ -12,3 +12,9 @@ export interface User {
   likedPosts: string[];
   createdAt: string;
 }
+
+export interface Hashtag {
+  _id: string;
+  tag: string;
+  count: number;
+}

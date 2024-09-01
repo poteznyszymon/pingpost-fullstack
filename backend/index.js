@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
-app.use("/api/hashtag", hashtagRoute);
+app.use("/api/hashtags", hashtagRoute);
 
 app.listen(PORT, () => {
   console.log("server running on port:", PORT);
