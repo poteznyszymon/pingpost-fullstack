@@ -27,7 +27,7 @@ const PostEditor = () => {
   };
 
   return (
-    <div className="bg-card p-5 rounded-2xl sticky top-[5.25rem] shadow-sm">
+    <div className="bg-card p-5 rounded-2xl sticky top-[9.2rem] shadow-sm">
       <div className="flex gap-5">
         <Link to={`/profile/${user?.username}`} className="flex-shrink-0">
           <UserAvatar avatarUrl={user?.profileImg || ""} className="size-10" />
@@ -35,12 +35,12 @@ const PostEditor = () => {
         <Textarea
           onChange={(e) => setUserInput(e.target.value)}
           value={userInput}
-          className="max-h-[20rem] rounded-2xl px-5 py-2 resize-none h-auto"
+          className="rounded-2xl px-5 py-2 resize-none h-12"
         />
       </div>
       {img && (
         <div className="h-64 my-5 ml-[4rem] rounded-2xl overflow-hidden relative group">
-          <img className="object-contain w-full h-full " src={img} />
+          <img className="object-contain w-full h-full border-2 rounded-2xl" src={img} />
           <div
             title="close image"
             onClick={() => setImg(null)}

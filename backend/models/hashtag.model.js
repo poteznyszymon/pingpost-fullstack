@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const hashtagSchema = mongoose.Schema({
+const hashtagSchema = new mongoose.Schema({
   tag: {
     type: String,
     required: true,
