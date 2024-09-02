@@ -3,6 +3,7 @@ import UserAvatar from "./UserAvatar";
 import { Link } from "react-router-dom";
 import { Bookmark, Heart, MessageCircle } from "lucide-react";
 import { Separator } from "./ui/separator";
+import { parseHashtags } from "@/lib/parseHashtag";
 
 interface PostComponentsProps {
   post: Post;
@@ -24,7 +25,7 @@ const PostComponents = ({ post }: PostComponentsProps) => {
           <p className="text-muted-foreground text-xs">21 hours ago</p>
         </div>
       </div>
-      <p>{post.text}</p>
+      <p>{parseHashtags(post.text)}</p>
       <Separator className="my-4" />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-5">
