@@ -13,6 +13,15 @@ export interface User {
   createdAt: string;
 }
 
+export interface Post {
+  _id: string;
+  text: string;
+  user: User;
+  likes: string[];
+  comments: string[];
+  createdAt: string;
+}
+
 export interface Hashtag {
   _id: string;
   tag: string;

@@ -27,10 +27,10 @@ const PostEditor = () => {
   };
 
   return (
-    <div className="bg-card p-5 rounded-2xl sticky top-[9.2rem] shadow-sm">
+    <div className="bg-card p-5 rounded-2xl shadow-sm">
       <div className="flex gap-5">
         <Link to={`/profile/${user?.username}`} className="flex-shrink-0">
-          <UserAvatar avatarUrl={user?.profileImg || ""} className="size-10" />
+          <UserAvatar avatarUrl={user?.profileImg || ""} className="" />
         </Link>
         <Textarea
           onChange={(e) => setUserInput(e.target.value)}

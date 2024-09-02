@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { User } from "@/lib/types";
+import { useQuery } from "@tanstack/react-query";
 
-import { Bell, Bookmark, Home, User } from "lucide-react";
+import { Bell, Bookmark, Home, User as UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface MenuBarProps {
@@ -8,6 +10,8 @@ interface MenuBarProps {
 }
 
 export default function MenuBar({ className }: MenuBarProps) {
+  const { data } = useQuery<User>({ queryKey: ["authUser"] });
+
   return (
     <div className={className}>
       <Button
@@ -49,8 +53,8 @@ export default function MenuBar({ className }: MenuBarProps) {
         title="Profile"
         asChild
       >
-        <Link to="/profile">
-          <User />
+        <Link to={`/profile/${data?.username}`}>
+          <UserIcon />
           <span className="hidden lg:inline">Profile</span>
         </Link>
       </Button>

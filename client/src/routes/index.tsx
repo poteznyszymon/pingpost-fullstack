@@ -7,6 +7,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import NotFound from "./NotFound";
+import ProfilePage from "@/pages/root/profile/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
+          },
+        ],
+      },
+      {
+        path: "profile/:username",
+        element: <RootLayout />,
+        children: [
+          {
+            index: true,
+            element: <ProfilePage />,
           },
         ],
       },

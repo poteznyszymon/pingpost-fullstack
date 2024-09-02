@@ -20,7 +20,7 @@ const RootLayout = () => {
         <Outlet />
         <RightPanel />
       </div>
-      <MenuBar className="sticky bottom-0 flex w-full justify-center gap-5 border-t bg-card p-3 sm:hidden" />
+      <MenuBar className="fixed bottom-0 flex w-full justify-center gap-5 border-t bg-card p-3 sm:hidden" />
     </div>
   );
 };

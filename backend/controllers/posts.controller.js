@@ -46,7 +46,9 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const allPosts = await Post.find({}).sort({ createdAt: -1 });
+    const allPosts = await Post.find({})
+      .sort({ createdAt: -1 })
+      .populate("user", "-password");
     res.status(200).json(allPosts);
   } catch (error) {
     console.log("error in getAllPosts controller: ", error);

@@ -1,4 +1,5 @@
 import PostEditor from "@/components/PostEditor";
+import Posts from "@/components/Posts";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
@@ -6,8 +7,8 @@ const HomePage = () => {
   const [feedType, setFeedType] = useState<"for-you" | "following">("for-you");
 
   return (
-    <div className="w-full h-screen flex-col space-y-5 ">
-      <Tabs className="sticky top-[5.25rem]" defaultValue={"for-you"}>
+    <div className="w-full h-screen flex-col space-y-5">
+      <Tabs className="shadow-sm" defaultValue={"for-you"}>
         <TabsList className="w-full bg-card grid grid-cols-2 h-[2.7rem]">
           <TabsTrigger
             value="for-you"
@@ -26,6 +27,7 @@ const HomePage = () => {
         </TabsList>
       </Tabs>
       <PostEditor />
+      <Posts feedType={feedType} />
     </div>
   );
 };
