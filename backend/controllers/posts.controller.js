@@ -46,7 +46,7 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const pageSize = 2;
+    const pageSize = 3;
     const cursor = req.query.cursor || null;
 
     const query = cursor ? { _id: { $lt: cursor } } : {};

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Bookmark, Heart, MessageCircle } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { parseHashtags } from "@/lib/parseHashtag";
+import { formatRelativeDate } from "@/lib/formatDate";
 
 interface PostComponentsProps {
   post: Post;
@@ -12,7 +13,7 @@ interface PostComponentsProps {
 const PostComponents = ({ post }: PostComponentsProps) => {
   return (
     <div className="bg-card w-full rounded-2xl p-5 space-y-5 shadow-sm">
-      <div className="flex gap-5 items-center">
+      <div className="flex gap-4 items-center">
         <Link to={`/profile/${post.user.username}`}>
           <UserAvatar avatarUrl={post.user.profileImg} />
         </Link>
@@ -22,7 +23,9 @@ const PostComponents = ({ post }: PostComponentsProps) => {
               {post.user.username}
             </p>
           </Link>
-          <p className="text-muted-foreground text-xs">21 hours ago</p>
+          <p className="text-muted-foreground text-xs">
+            {formatRelativeDate(new Date(post.createdAt))}
+          </p>
         </div>
       </div>
       <p>{parseHashtags(post.text)}</p>
