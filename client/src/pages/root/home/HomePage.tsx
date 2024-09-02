@@ -7,7 +7,7 @@ const HomePage = () => {
   const [feedType, setFeedType] = useState<"for-you" | "following">("for-you");
 
   return (
-    <div className="w-full h-screen flex-col space-y-5">
+    <div className="w-full  flex-col space-y-5">
       <Tabs className="shadow-sm" defaultValue={"for-you"}>
         <TabsList className="w-full bg-card grid grid-cols-2 h-[2.7rem]">
           <TabsTrigger

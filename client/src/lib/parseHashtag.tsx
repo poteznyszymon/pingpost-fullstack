@@ -10,7 +10,7 @@ export const parseHashtags = (text: string) => {
         <Link
           to={`/hashtag/${part}`}
           key={index}
-          className=" text-primary hover:underline"
+          className=" text-primary hover:underline font-semibold"
         >
           #{part}
         </Link>

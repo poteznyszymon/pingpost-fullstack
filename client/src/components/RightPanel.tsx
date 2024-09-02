@@ -62,7 +62,7 @@ function Trending({
       <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm ">
         <h1 className="text-xl font-bold">Trending topics</h1>
         {trendingHashtags.map((hashtag) => (
-          <div className="flex flex-col">
+          <div key={hashtag._id} className="flex flex-col">
             <Link to={`/hashtag/${hashtag.tag}`}>
               <p className="hover:underline">#{hashtag.tag}</p>
             </Link>

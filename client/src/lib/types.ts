@@ -27,3 +27,8 @@ export interface Hashtag {
   tag: string;
   count: number;
 }
+
+export interface PostData {
+  posts: Post[];
+  nextCursor: string | null;
+}

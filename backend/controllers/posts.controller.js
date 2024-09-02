@@ -46,10 +46,24 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const allPosts = await Post.find({})
+    const pageSize = 2;
+    const cursor = req.query.cursor || null;
+
+    const query = cursor ? { _id: { $lt: cursor } } : {};
+
+    let posts = await Post.find(query)
       .sort({ createdAt: -1 })
+      .limit(pageSize + 1)
       .populate("user", "-password");
-    res.status(200).json(allPosts);
+
+    const hasNextPage = posts.length > pageSize;
+    const nextCursor = hasNextPage ? posts[pageSize - 1]._id : null;
+
+    if (hasNextPage) {
+      posts = posts.slice(0, pageSize);
+    }
+
+    res.status(200).json({ posts, nextCursor });
   } catch (error) {
     console.log("error in getAllPosts controller: ", error);
     res.status(500).json({ error: "Internal server error" });

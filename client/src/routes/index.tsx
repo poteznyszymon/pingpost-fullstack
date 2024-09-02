@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import NotFound from "./NotFound";
 import ProfilePage from "@/pages/root/profile/ProfilePage";
+import HashtagPage from "@/pages/root/hashtag/HashtagPage";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <ProfilePage />,
+          },
+        ],
+      },
+      {
+        path: "hashtag/:tag",
+        element: <RootLayout />,
+        children: [
+          {
+            index: true,
+            element: <HashtagPage />,
           },
         ],
       },

@@ -1,22 +1,45 @@
-import { Post } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import { PostData } from "@/lib/types"; // Adjust the import paths as necessary
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const useGetPosts = (feedType: string) => {
-  const { data, isLoading } = useQuery<Post[]>({
-    queryKey: ["posts", `${feedType}`],
-    queryFn: async () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["posts", feedType],
+    queryFn: async ({ pageParam = null }) => {
       try {
-        const res = await fetch("/api/posts/get-all");
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
+        const res = await fetch(
+          `/api/posts/get-all${pageParam ? `?cursor=${pageParam}` : ""}`
+        );
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Error fetching posts");
+        }
+        const data: PostData = await res.json();
+
         return data;
       } catch (error) {
-        console.log(error);
+        console.log("Error fetching posts:", error);
+        throw error;
       }
     },
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
-  return { data, isLoading };
+  return {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  };
 };
 
 export default useGetPosts;
