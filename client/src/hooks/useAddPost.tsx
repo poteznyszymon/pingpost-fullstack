@@ -57,6 +57,14 @@ const useAddPostMutation = (options: UseAddPostMutationOptions) => {
           }
         }
       );
+
+      queryClient.invalidateQueries({
+        queryKey: queryFilter.queryKey,
+        predicate(query) {
+          return !query.state.data;
+        },
+      });
+
       toast({
         description: "Post added successfully",
       });
