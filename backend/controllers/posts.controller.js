@@ -37,7 +37,15 @@ export const createPost = async (req, res) => {
         { upsert: true }
       );
     }
-    res.status(200).json({ message: "Post added successfully", post: newPost });
+
+    const populatedPost = await Post.findById(newPost._id).populate(
+      "user",
+      "-password"
+    );
+
+    res
+      .status(200)
+      .json({ message: "Post added successfully", post: populatedPost });
   } catch (error) {
     console.log("Error in create post controller: ", error);
     res.status(500).json({ error: "Internal server error" });
@@ -66,6 +74,47 @@ export const getAllPosts = async (req, res) => {
     res.status(200).json({ posts, nextCursor });
   } catch (error) {
     console.log("error in getAllPosts controller: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+    const post = await Post.findById(postId);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    if (post.user._id.toString() !== user._id.toString())
+      return res
+        .status(401)
+        .json({ error: "Your are not authorized to delete this post" });
+
+    if (post.img) {
+      const imgId = post.img.split("/").pop().split(".")[0];
+      v2.uploader.destroy(imgId);
+    }
+
+    const extractedHashtag = extractHashtag(post.text);
+    for (const tag of extractedHashtag) {
+      const currentHashtag = await Hashtag.findOneAndUpdate(
+        { tag },
+        { $inc: { count: -1 } }
+      );
+
+      if (currentHashtag && currentHashtag.count === 1) {
+        await Hashtag.findOneAndDelete({ tag });
+      }
+    }
+
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ message: "Post deleted successfully", post: post });
+  } catch (error) {
+    console.log("error in deletePost controller: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

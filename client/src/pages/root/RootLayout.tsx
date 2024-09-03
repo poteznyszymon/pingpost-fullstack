@@ -1,17 +1,9 @@
-import { useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import MenuBar from "./MenuBar";
 import RightPanel from "@/components/RightPanel";
 
 const RootLayout = () => {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    document.title =
-      pathname === "/" ? "pingpost" : `${pathname.split("/")[1]} | pingpost`;
-  }, [pathname]);
-
   return (
     <div className="min-h-screen">
       <Navbar />

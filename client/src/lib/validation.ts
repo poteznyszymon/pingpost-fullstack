@@ -22,4 +22,7 @@ export type loginValues = z.infer<typeof loginSchema>;
 
 export const createPostSchema = z.object({
   content: z.string(),
+  image: z.string(),
 });
+
+export type createPostValues = z.infer<typeof createPostSchema>;

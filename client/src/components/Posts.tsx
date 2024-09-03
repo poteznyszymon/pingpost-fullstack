@@ -14,9 +14,7 @@ const Posts = ({ feedType }: PostsProps) => {
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   if (posts?.length === 0 && !isFetching)
-    return (
-      <p className="text-center text-lg font-semibold">No posts here yet.</p>
-    );
+    return <p className="text-center  font-semibold">No posts here yet.</p>;
   if (isFetching && !isFetchingNextPage)
     return (
       <>

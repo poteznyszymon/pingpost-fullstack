@@ -16,6 +16,7 @@ export interface User {
 export interface Post {
   _id: string;
   text: string;
+  img: string | null;
   user: User;
   likes: string[];
   comments: string[];
@@ -28,7 +29,16 @@ export interface Hashtag {
   count: number;
 }
 
-export interface PostData {
+export interface CreatePostData {
+  text: string;
+  img: string | null;
+}
+
+export interface PostsPage {
   posts: Post[];
   nextCursor: string | null;
+}
+
+export interface DeletePostData {
+  id: string;
 }

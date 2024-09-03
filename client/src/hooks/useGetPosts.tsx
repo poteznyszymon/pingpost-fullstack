@@ -1,4 +1,4 @@
-import { PostData } from "@/lib/types"; // Adjust the import paths as necessary
+import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 const useGetPosts = (feedType: string) => {
@@ -20,7 +20,7 @@ const useGetPosts = (feedType: string) => {
           const errorData = await res.json();
           throw new Error(errorData.error || "Error fetching posts");
         }
-        const data: PostData = await res.json();
+        const data: PostsPage = await res.json();
 
         return data;
       } catch (error) {
