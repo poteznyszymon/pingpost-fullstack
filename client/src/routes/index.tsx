@@ -9,11 +9,18 @@ import PublicRoute from "./PublicRoute";
 import NotFound from "./NotFound";
 import ProfilePage from "@/pages/root/profile/ProfilePage";
 import HashtagPage from "@/pages/root/hashtag/HashtagPage";
+import ScrollToTop from "@/lib/ScrollToTop";
+import NotificationsPage from "@/pages/root/notifications/NotificationsPage";
+import BookmarksPage from "@/pages/root/bookmarks/BookmarksPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute />,
+    element: (
+      <ScrollToTop>
+        <ProtectedRoute />
+      </ScrollToTop>
+    ),
     children: [
       {
         element: <RootLayout />,
@@ -22,25 +29,21 @@ const router = createBrowserRouter([
             index: true,
             element: <HomePage />,
           },
-        ],
-      },
-      {
-        path: "profile/:username",
-        element: <RootLayout />,
-        children: [
           {
-            index: true,
+            path: "profile/:username",
             element: <ProfilePage />,
           },
-        ],
-      },
-      {
-        path: "hashtag/:tag",
-        element: <RootLayout />,
-        children: [
           {
-            index: true,
+            path: "hashtag/:tag",
             element: <HashtagPage />,
+          },
+          {
+            path: "notifications",
+            element: <NotificationsPage />,
+          },
+          {
+            path: "bookmarks",
+            element: <BookmarksPage />,
           },
         ],
       },

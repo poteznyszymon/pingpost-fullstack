@@ -18,3 +18,67 @@ export const getSuggested = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const followUser = async (req, res) => {
+  const userToFollowId = req.params.id;
+  const userId = req.user._id;
+
+  const userToFollow = await User.findById(userToFollowId);
+  const user = await User.findById(userId);
+
+  if (!user || !userToFollow)
+    return res.status(404).json({ error: "User not found" });
+
+  if (userToFollowId.toString() === userId.toString()) {
+    return res.status(400).json({ error: "You can't follow yourself" });
+  }
+
+  await User.findOneAndUpdate(
+    { _id: userToFollow },
+    { $push: { followers: userId } }
+  );
+
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $push: { following: userToFollowId } }
+  );
+
+  res.status(200).json({ message: "User followed successfully" });
+  try {
+  } catch (error) {
+    console.log("Error in followUser controller: ", error);
+    res.staus(500).json({ error: "Internal server error" });
+  }
+};
+
+export const unfollowUser = async (req, res) => {
+  const userToFollowId = req.params.id;
+  const userId = req.user._id;
+
+  const userToFollow = await User.findById(userToFollowId);
+  const user = await User.findById(userId);
+
+  if (!user || !userToFollow)
+    return res.status(404).json({ error: "User not found" });
+
+  if (userToFollowId.toString() === userId.toString()) {
+    return res.status(400).json({ error: "You can't follow yourself" });
+  }
+
+  await User.findOneAndUpdate(
+    { _id: userToFollow },
+    { $pull: { followers: userId } }
+  );
+
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { following: userToFollowId } }
+  );
+
+  res.status(200).json({ message: "User unfollowed successfully" });
+  try {
+  } catch (error) {
+    console.log("Error in followUser controller: ", error);
+    res.staus(500).json({ error: "Internal server error" });
+  }
+};

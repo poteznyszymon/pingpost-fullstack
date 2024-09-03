@@ -61,7 +61,10 @@ const PostComponents = ({ post }: PostComponentsProps) => {
                 <X className="size-5" />
               </div>
             </DialogTrigger>
-            <DialogContent className="px-10">
+            <DialogContent
+              className="px-10"
+              onCloseClick={() => setOpenDialog(false)}
+            >
               <DialogTitle>
                 Are you sure you want to delete this post? This action cannot be
                 undone.
@@ -73,6 +76,7 @@ const PostComponents = ({ post }: PostComponentsProps) => {
                 <LoadingButton
                   loading={isPending}
                   variant="destructive"
+                  className="bg-primary hover:bg-primary/80"
                   onClick={() => mutate(post._id || "")}
                 >
                   Delete
