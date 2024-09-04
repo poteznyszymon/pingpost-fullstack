@@ -21,7 +21,7 @@ const HomePage = () => {
         changeFeed={(feed) => setFeedType(feed)}
       />
       <PostEditor />
-      <Posts feedType={"for-you"} />
+      <Posts feedType={feedType} />
     </div>
   );
 };

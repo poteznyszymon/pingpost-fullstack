@@ -13,16 +13,29 @@ const useGetPosts = (feedType: string) => {
     queryKey: ["posts", feedType],
     queryFn: async ({ pageParam = null }) => {
       try {
-        const res = await fetch(
-          `/api/posts/get-all${pageParam ? `?cursor=${pageParam}` : ""}`
-        );
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || "Error fetching posts");
-        }
-        const data: PostsPage = await res.json();
+        if (feedType === "for-you") {
+          const res = await fetch(
+            `/api/posts/get-all${pageParam ? `?cursor=${pageParam}` : ""}`
+          );
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Error fetching posts");
+          }
+          const data: PostsPage = await res.json();
 
-        return data;
+          return data;
+        } else {
+          const res = await fetch(
+            `/api/posts/get/following${pageParam ? `?cursor=${pageParam}` : ""}`
+          );
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Error fetching posts");
+          }
+          const data: PostsPage = await res.json();
+
+          return data;
+        }
       } catch (error) {
         console.log("Error fetching posts:", error);
         throw error;
