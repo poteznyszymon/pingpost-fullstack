@@ -1,6 +1,9 @@
+import ProfileSkeleton from "@/components/ProfileSkeleton";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import useFollowUser from "@/hooks/useFollowUser";
 import useGetUser from "@/hooks/useGetUser";
+import useUnfollowUser from "@/hooks/useUnfollowUser";
 import { formatMemberSince } from "@/lib/formatDate";
 import { User } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
@@ -14,10 +17,14 @@ const ProfilePage = () => {
     document.title = `${username} | pingpost`;
   }, [username]);
 
-  const { user, isError, refetch } = useGetUser(username || "");
+  const { user, isError, refetch, isLoading } = useGetUser(username || "");
   const { data: loggedUser } = useQuery<User>({ queryKey: ["authUser"] });
+  const { unfollow } = useUnfollowUser(username || "");
+  const { follow } = useFollowUser(username || "");
 
   const isMyProfile = user?._id === loggedUser?._id;
+  const isFollowing = user?.followers?.includes(loggedUser?._id || "") || false;
+
 
   if (isError)
     return (
@@ -26,6 +33,13 @@ const ProfilePage = () => {
           An error has occurred
         </p>
         <Button onClick={() => refetch()}>Try again</Button>
+      </div>
+    );
+
+  if (isLoading)
+    return (
+      <div className="w-full min-h-screen flex-col ">
+        <ProfileSkeleton />
       </div>
     );
 
@@ -60,9 +74,11 @@ const ProfilePage = () => {
             <p className="text-muted-foreground text-sm">@{user?.username}</p>
           </div>
           {isMyProfile ? (
-            <Button variant={"outline"}>Edit profile</Button>
+            <Button variant={"secondary"}>Edit profile</Button>
+          ) : isFollowing ? (
+            <Button onClick={() => unfollow(user?._id || "")}>Unfollow</Button>
           ) : (
-            <Button>Follow</Button>
+            <Button onClick={() => follow(user?._id || "")}>Follow</Button>
           )}
         </div>
         <div className="text-sm">
@@ -78,7 +94,7 @@ const ProfilePage = () => {
         </div>
         {user?.bio && (
           <>
-            <Separator className="my-2"/>
+            <Separator className="my-2" />
             <p className="text-sm">{user?.bio}</p>
           </>
         )}

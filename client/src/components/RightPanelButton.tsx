@@ -8,7 +8,7 @@ interface FollowButtonProps {
   userToFollow: User;
 }
 
-const FollowButton = ({ className, userToFollow }: FollowButtonProps) => {
+const RightPanelButton = ({ className, userToFollow }: FollowButtonProps) => {
   const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -43,8 +43,10 @@ const FollowButton = ({ className, userToFollow }: FollowButtonProps) => {
         );
       });
 
-      // Optionally, update the cache for userToFollow if it's separately cached
-      queryClient.setQueryData<User>(["user", userToFollow._id], updatedUser);
+      queryClient.setQueryData<User>(
+        ["user", userToFollow.username],
+        updatedUser
+      );
 
       toast({ description: `${userToFollow.username} followed successfully` });
     },
@@ -61,4 +63,4 @@ const FollowButton = ({ className, userToFollow }: FollowButtonProps) => {
   );
 };
 
-export default FollowButton;
+export default RightPanelButton;

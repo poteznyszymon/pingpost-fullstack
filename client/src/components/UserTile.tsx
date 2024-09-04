@@ -1,6 +1,6 @@
 import { User } from "@/lib/types";
 import UserAvatar from "./UserAvatar";
-import FollowButton from "./FollowButton";
+import FollowButton from "./RightPanelButton";
 import { Link } from "react-router-dom";
 
 interface UserTileProps {

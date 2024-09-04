@@ -67,10 +67,10 @@ export const unfollowUser = async (req, res) => {
   const userToUnFollowId = req.params.id;
   const userId = req.user._id;
 
-  const userToFollow = await User.findById(userToUnFollowId);
+  const userToUnfollow = await User.findById(userToUnFollowId);
   const user = await User.findById(userId);
 
-  if (!user || !userToFollow)
+  if (!user || !userToUnfollow)
     return res.status(404).json({ error: "User not found" });
 
   if (userToUnFollowId.toString() === userId.toString()) {
@@ -78,7 +78,7 @@ export const unfollowUser = async (req, res) => {
   }
 
   await User.findOneAndUpdate(
-    { _id: userToFollow },
+    { _id: userToUnfollow },
     { $pull: { followers: userId } }
   );
 
@@ -89,7 +89,7 @@ export const unfollowUser = async (req, res) => {
 
   res
     .status(200)
-    .json({ message: "User unfollowed successfully", user: userToUnFollowId });
+    .json({ message: "User followed successfully", user: userToUnfollow });
   try {
   } catch (error) {
     console.log("Error in followUser controller: ", error);
