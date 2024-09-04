@@ -3,7 +3,6 @@ import UserAvatar from "./UserAvatar";
 import { Link } from "react-router-dom";
 import { Bookmark, Heart, MessageCircle, X } from "lucide-react";
 import { Separator } from "./ui/separator";
-import { parseHashtags } from "@/lib/parseHashtag";
 import { formatRelativeDate } from "@/lib/formatDate";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -17,6 +16,7 @@ import useDeletePost from "@/hooks/useDeletePost";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import LoadingButton from "./LoadingButton";
+import { parseText } from "@/lib/ParseText";
 
 interface PostComponentsProps {
   post: Post;
@@ -86,7 +86,7 @@ const PostComponents = ({ post }: PostComponentsProps) => {
           </Dialog>
         )}
       </div>
-      <p>{parseHashtags(post.text)}</p>
+      <p>{parseText(post.text)}</p>
       {post.img && <img className="rounded-2xl" src={post.img || ""} />}
       <Separator className="my-4" />
       <div className="flex items-center justify-between">

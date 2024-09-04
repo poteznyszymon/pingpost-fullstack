@@ -12,3 +12,16 @@ export function formatRelativeDate(from: Date) {
     }
   }
 }
+
+export function formatMemberSince(isoDateString: string): string {
+  const date = new Date(isoDateString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+  const formattedDate: string = date.toLocaleDateString("en-US", options);
+
+  return `Member since ${formattedDate}`;
+}

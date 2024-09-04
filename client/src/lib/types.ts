@@ -6,6 +6,7 @@ export interface User {
   bio: string;
   link: string;
   profileImg: string;
+  coverImg: string;
   followers: string[];
   following: string[];
   bookmarks: string[];

@@ -21,7 +21,7 @@ const UserTile = ({ user }: UserTileProps) => {
         </Link>
         <p className="text-xs text-muted-foreground">@{user.username}</p>
       </div>
-      <FollowButton className="ml-auto h-9 text-sm" />
+      <FollowButton userToFollow={user} className="ml-auto h-9 text-sm" />
     </div>
   );
 };
