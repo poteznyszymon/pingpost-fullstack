@@ -24,6 +24,8 @@ const useFollowUser = (username: string) => {
     },
     onSuccess: async (updatedUser: User) => {
       updatedUser.followers.push(user?._id || "");
+      user?.following.push(updatedUser._id);
+
 
       queryClient.setQueryData<User[]>(["suggestedUsers"], (oldData) => {
         if (!oldData) return;
@@ -35,6 +37,7 @@ const useFollowUser = (username: string) => {
       });
 
       queryClient.setQueryData<User>(["user", username], updatedUser);
+      queryClient.setQueryData<User>(["user", `${user?.username}`], user);
 
       toast({ description: `${username} followed successfully` });
     },

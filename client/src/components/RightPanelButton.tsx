@@ -33,6 +33,7 @@ const RightPanelButton = ({ className, userToFollow }: FollowButtonProps) => {
     },
     onSuccess: async (updatedUser: User) => {
       updatedUser.followers.push(user?._id || "");
+      user?.following.push(updatedUser._id);
 
       queryClient.setQueryData<User[]>(["suggestedUsers"], (oldData) => {
         if (!oldData) return;
@@ -42,6 +43,7 @@ const RightPanelButton = ({ className, userToFollow }: FollowButtonProps) => {
             : item
         );
       });
+      queryClient.setQueryData<User>(["user", `${user?.username}`], user);
 
       queryClient.setQueryData<User>(
         ["user", userToFollow.username],

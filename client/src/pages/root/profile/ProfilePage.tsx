@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Pen } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import EditProfileDialog from "./EditProfileDialog";
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -24,7 +25,6 @@ const ProfilePage = () => {
 
   const isMyProfile = user?._id === loggedUser?._id;
   const isFollowing = user?.followers?.includes(loggedUser?._id || "") || false;
-
 
   if (isError)
     return (
@@ -73,8 +73,8 @@ const ProfilePage = () => {
             </h1>
             <p className="text-muted-foreground text-sm">@{user?.username}</p>
           </div>
-          {isMyProfile ? (
-            <Button variant={"secondary"}>Edit profile</Button>
+          {isMyProfile && user ? (
+            <EditProfileDialog user={user} />
           ) : isFollowing ? (
             <Button onClick={() => unfollow(user?._id || "")}>Unfollow</Button>
           ) : (
