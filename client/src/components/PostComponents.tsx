@@ -17,6 +17,8 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import LoadingButton from "./LoadingButton";
 import { parseText } from "@/lib/ParseText";
+import useAddToBookmarks from "@/hooks/useAddToBookmarks";
+import useDeleteFromBookmarks from "@/hooks/useDeleteFromBookmarks";
 
 interface PostComponentsProps {
   post: Post;
@@ -24,6 +26,8 @@ interface PostComponentsProps {
 
 const PostComponents = ({ post }: PostComponentsProps) => {
   const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
+  const { addToBookmarks } = useAddToBookmarks();
+  const { deleteFromBookmarks } = useDeleteFromBookmarks();
   const { mutate, isPending } = useDeletePost({
     onSuccess() {
       setOpenDialog(false);
@@ -33,6 +37,7 @@ const PostComponents = ({ post }: PostComponentsProps) => {
     },
   });
   const isOwnPost = post.user._id === user?._id;
+  const inBookmarks = user?.bookmarks.includes(post._id);
   const [openDialog, setOpenDialog] = useState(false);
 
   return (
@@ -102,7 +107,21 @@ const PostComponents = ({ post }: PostComponentsProps) => {
             </p>
           </div>
         </div>
-        <Bookmark className="size-5 cursor-pointer" />
+        <div
+          title={inBookmarks ? "delete from bookmarks" : "add to bookmarks"}
+          className="hover:bg-primary/10 p-1 rounded-full"
+        >
+          <Bookmark
+            onClick={
+              !inBookmarks
+                ? () => addToBookmarks(post._id)
+                : () => {
+                    deleteFromBookmarks(post._id);
+                  }
+            }
+            className={`size-5 hover:text-primary cursor-pointer ${inBookmarks ? "fill-primary text-primary" : ""}`}
+          />
+        </div>
       </div>
     </div>
   );

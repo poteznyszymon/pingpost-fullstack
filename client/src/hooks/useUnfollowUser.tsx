@@ -26,6 +26,10 @@ const useUnfollowUser = (username: string) => {
       updatedUser.followers = updatedUser.followers.filter(
         (followerId) => followerId !== (user?._id || "")
       );
+      if (!user) return;
+      user.following = user?.following.filter(
+        (followerId) => followerId !== updatedUser._id
+      );
 
       queryClient.setQueryData<User[]>(["suggestedUsers"], (oldData) => {
         if (!oldData) return;
@@ -37,6 +41,7 @@ const useUnfollowUser = (username: string) => {
       });
 
       queryClient.setQueryData<User>(["user", username], updatedUser);
+      queryClient.setQueryData<User>(["user", `${user?.username}`], user);
 
       toast({
         description: `${username} unfollowed successfully`,

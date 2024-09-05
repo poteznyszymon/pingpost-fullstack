@@ -7,10 +7,10 @@ const PostSkeleton = () => {
         <Skeleton className="size-9 rounded-full" />
         <div className="flex flex-col gap-2 justify-center">
           <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-4 w-16" />
         </div>
       </div>
-      <Skeleton className="w-full h-20" />
+      <Skeleton className="w-full h-20 rounded-2xl" />
     </div>
   );
 };
