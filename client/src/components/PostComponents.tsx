@@ -19,15 +19,20 @@ import LoadingButton from "./LoadingButton";
 import { parseText } from "@/lib/ParseText";
 import useAddToBookmarks from "@/hooks/useAddToBookmarks";
 import useDeleteFromBookmarks from "@/hooks/useDeleteFromBookmarks";
+import useLikePost from "@/hooks/useLikePost";
+import useUnlikePost from "@/hooks/useUnlikePost";
 
 interface PostComponentsProps {
   post: Post;
+  feedType: string;
 }
 
-const PostComponents = ({ post }: PostComponentsProps) => {
+const PostComponents = ({ post, feedType }: PostComponentsProps) => {
   const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
-  const { addToBookmarks } = useAddToBookmarks();
-  const { deleteFromBookmarks } = useDeleteFromBookmarks();
+  const { addToBookmarks, isAdding } = useAddToBookmarks();
+  const { deleteFromBookmarks, isDeleting } = useDeleteFromBookmarks();
+  const { likePost } = useLikePost(feedType);
+  const { unlikePost } = useUnlikePost(feedType);
   const { mutate, isPending } = useDeletePost({
     onSuccess() {
       setOpenDialog(false);
@@ -38,7 +43,18 @@ const PostComponents = ({ post }: PostComponentsProps) => {
   });
   const isOwnPost = post.user._id === user?._id;
   const inBookmarks = user?.bookmarks.includes(post._id);
+  const isLiked = user?.likedPosts.includes(post._id);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const handleBookmarksClick = () => {
+    if (!isAdding && !isDeleting) {
+      if (inBookmarks) {
+        return deleteFromBookmarks(post._id);
+      } else {
+        return addToBookmarks(post._id);
+      }
+    }
+  };
 
   return (
     <div className="bg-card w-full rounded-2xl p-5 space-y-5 shadow-sm group">
@@ -96,9 +112,25 @@ const PostComponents = ({ post }: PostComponentsProps) => {
       <Separator className="my-4" />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <div className="flex gap-2 items-center">
-            <Heart className="size-5 cursor-pointer" />
-            <p className="text-xs font-semibold">{post.likes.length} likes</p>
+          <div className="flex gap-1 items-center">
+            <div
+              title={isLiked ? "unlike post" : "like post"}
+              className="hover:bg-primary/10 p-1 rounded-full cursor-pointer group/likes"
+              onClick={
+                !isLiked
+                  ? () => likePost(post._id)
+                  : () => {
+                      unlikePost(post._id);
+                    }
+              }
+            >
+              <Heart
+                className={`size-5 group-hover/likes:text-primary  ${isLiked ? "fill-primary text-primary" : ""}`}
+              />
+            </div>
+            <p className="text-xs font-semibold">
+              {post.likes.length} {post.likes.length === 1 ? "like" : "likes"}
+            </p>
           </div>
           <div className="flex gap-2 items-center">
             <MessageCircle className="size-5 cursor-pointer" />
@@ -109,17 +141,11 @@ const PostComponents = ({ post }: PostComponentsProps) => {
         </div>
         <div
           title={inBookmarks ? "delete from bookmarks" : "add to bookmarks"}
-          className="hover:bg-primary/10 p-1 rounded-full"
+          className="hover:bg-primary/10 p-1 rounded-full group/bookmarks cursor-pointer"
+          onClick={handleBookmarksClick}
         >
           <Bookmark
-            onClick={
-              !inBookmarks
-                ? () => addToBookmarks(post._id)
-                : () => {
-                    deleteFromBookmarks(post._id);
-                  }
-            }
-            className={`size-5 hover:text-primary cursor-pointer ${inBookmarks ? "fill-primary text-primary" : ""}`}
+            className={`size-5 group-hover/bookmarks:text-primary  ${inBookmarks ? "fill-primary text-primary" : ""}`}
           />
         </div>
       </div>

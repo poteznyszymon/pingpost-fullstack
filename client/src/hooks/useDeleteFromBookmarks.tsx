@@ -5,7 +5,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const useDeleteFromBookmarks = () => {
   const { toast } = useToast();
 
-  const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
+  const { data: user, isFetching: isDeleting } = useQuery<User>({
+    queryKey: ["authUser"],
+  });
   const queryClient = useQueryClient();
 
   const { mutate: deleteFromBookmarks } = useMutation({
@@ -37,7 +39,7 @@ const useDeleteFromBookmarks = () => {
       });
     },
   });
-  return { deleteFromBookmarks };
+  return { deleteFromBookmarks, isDeleting };
 };
 
 export default useDeleteFromBookmarks;

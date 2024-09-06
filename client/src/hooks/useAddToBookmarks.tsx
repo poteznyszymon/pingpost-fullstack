@@ -5,7 +5,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const useAddToBookmarks = () => {
   const { toast } = useToast();
 
-  const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
+  const { data: user, isFetching: isAdding } = useQuery<User>({
+    queryKey: ["authUser"],
+  });
   const queryClient = useQueryClient();
 
   const { mutate: addToBookmarks } = useMutation({
@@ -34,7 +36,7 @@ const useAddToBookmarks = () => {
       });
     },
   });
-  return { addToBookmarks };
+  return { addToBookmarks, isAdding };
 };
 
 export default useAddToBookmarks;

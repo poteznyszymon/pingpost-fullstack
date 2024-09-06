@@ -29,7 +29,9 @@ const Posts = ({ feedType }: PostsProps) => {
         onBottom={() => hasNextPage && !isFetching && fetchNextPage()}
         className="space-y-5 "
       >
-        {posts?.map((post) => <PostComponents key={post._id} post={post} />)}
+        {posts?.map((post) => (
+          <PostComponents key={post._id} feedType={feedType} post={post} />
+        ))}
         {isFetchingNextPage && (
           <div className="flex w-full justify-center h-full items-center py-10">
             <Loader2 className="size-5 animate-spin" />

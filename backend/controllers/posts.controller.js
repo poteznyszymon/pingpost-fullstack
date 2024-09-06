@@ -164,6 +164,9 @@ export const addPostToBookmarks = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     if (!post) return res.status(404).json({ error: "Post not found" });
 
+    if (user.bookmarks.includes(post._id))
+      return res.status(400).json({ error: "Post already added to bookmarks" });
+
     await User.findByIdAndUpdate(userId, { $push: { bookmarks: postId } });
     return res
       .status(200)
@@ -185,6 +188,11 @@ export const deletePostFromBookmarks = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     if (!post) return res.status(404).json({ error: "Post not found" });
 
+    if (!user.bookmarks.includes(post._id))
+      return res
+        .status(400)
+        .json({ error: "Post already deleted from bookmarks" });
+
     await User.findByIdAndUpdate(userId, { $pull: { bookmarks: postId } });
     return res.status(200).json({
       message: "Post deleted from bookmarks successfully",
@@ -192,6 +200,58 @@ export const deletePostFromBookmarks = async (req, res) => {
     });
   } catch (error) {
     console.log("error in addPostToBookmarks controller: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const likePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId).populate("user", "-password");
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    //if (user.likedPosts.includes(post._id) || post.likes.includes(user._id))
+    //    return res.status(400).json({ error: "Post already liked" });
+
+    await User.findByIdAndUpdate(userId, { $push: { likedPosts: postId } });
+    await Post.findByIdAndUpdate(postId, { $push: { likes: userId } });
+    return res
+      .status(200)
+      .json({ message: "Post liked successfully", post: post });
+  } catch (error) {
+    console.log("error in likePost controller: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const unlikePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId).populate("user", "-password");
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    //if (!user.likedPosts.includes(post._id) || !post.likes.includes(user._id))
+    //  return res.status(400).json({ error: "Post already unliked" });
+
+    await User.findByIdAndUpdate(userId, { $pull: { likedPosts: postId } });
+    await Post.findByIdAndUpdate(postId, { $pull: { likes: userId } });
+
+    return res.status(200).json({
+      message: "Post unliked successfully",
+      post: post,
+    });
+  } catch (error) {
+    console.log("error in unlikePost controller: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

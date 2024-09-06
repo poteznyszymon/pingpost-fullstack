@@ -4,9 +4,9 @@ import RegisterForm from "./RegisterForm";
 const page = () => {
   return (
     <main className="relative flex h-screen items-center justify-center">
-      <div className="bg-card border-input flex w-full max-w-[26rem] justify-center rounded-md border py-5 shadow-2xl">
+      <div className="bg-card border-input flex w-full sm:max-w-[26rem] h-full sm:h-auto justify-center rounded-md border py-5 shadow-2xl">
         <div className="flex h-full w-full flex-col justify-center space-y-10 overflow-y-auto p-5">
-          <h2 className="text-3xl font-semibold tracking-tighter">
+          <h2 className="text-3xl font-semibold tracking-tighter text-center sm:text-start">
             Create pingpong account
           </h2>
           <RegisterForm />

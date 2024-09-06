@@ -12,7 +12,7 @@ const AuthLayout = () => {
   return (
     <div className="h-screen w-screen">
       {" "}
-      <div className="bg-card fixed top-0 z-10 hidden w-full items-center justify-between px-5 py-3 shadow-sm lg:flex">
+      <div className="bg-card fixed top-0 z-10 hidden w-full items-center justify-between px-5 py-3 shadow-sm sm:flex">
         <Link to="/login">
           <h3 className="text-primary text-2xl font-semibold tracking-tighter">
             pingpost
