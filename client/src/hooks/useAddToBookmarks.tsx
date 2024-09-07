@@ -28,6 +28,9 @@ const useAddToBookmarks = () => {
     onSuccess: async (post: Post) => {
       user?.bookmarks.push(post._id);
       queryClient.setQueryData<User>(["authUser"], user);
+
+      queryClient.cancelQueries();
+      queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
     },
     onError: () => {
       toast({

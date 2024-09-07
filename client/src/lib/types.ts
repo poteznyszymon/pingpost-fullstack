@@ -43,3 +43,13 @@ export interface PostsPage {
 export interface DeletePostData {
   id: string;
 }
+
+export interface editUserData {
+  displayName?: "";
+  email?: "";
+  newPassword?: "";
+  currentPassword?: "";
+  bio?: "";
+  profileImg?: string | null;
+  coverImg?: string | null;
+}

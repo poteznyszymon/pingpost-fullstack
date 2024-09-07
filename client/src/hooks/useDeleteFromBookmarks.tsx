@@ -1,6 +1,11 @@
 import { useToast } from "@/components/ui/use-toast";
-import { Post, User } from "@/lib/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Post, PostsPage, User } from "@/lib/types";
+import {
+  InfiniteData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 const useDeleteFromBookmarks = () => {
   const { toast } = useToast();
@@ -27,11 +32,29 @@ const useDeleteFromBookmarks = () => {
     },
     onSuccess: async (post: Post) => {
       if (!user) return;
+
+      // auth user cache
       user.bookmarks = user.bookmarks.filter(
         (postId) => postId !== post._id.toString()
       );
       queryClient.setQueryData<User>(["authUser"], user);
+
+      // post bookmarks cache
+      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+        { queryKey: ["posts", "bookmarks"] },
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              posts: page.posts.filter((p) => p._id !== post._id),
+            })),
+          };
+        }
+      );
     },
+
     onError: () => {
       toast({
         description: "Something went wrong. Please try again.",

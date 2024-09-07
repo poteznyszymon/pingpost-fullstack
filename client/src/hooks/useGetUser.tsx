@@ -6,6 +6,7 @@ const useGetUser = (username: string) => {
     data: user,
     isLoading,
     isError,
+    isRefetching,
     refetch,
   } = useQuery<User>({
     queryKey: ["user", `${username}`],
@@ -21,7 +22,7 @@ const useGetUser = (username: string) => {
     },
   });
 
-  return { user, isLoading, isError, refetch };
+  return { user, isLoading, isError, refetch, isRefetching };
 };
 
 export default useGetUser;

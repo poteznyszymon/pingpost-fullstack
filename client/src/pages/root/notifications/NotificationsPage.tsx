@@ -9,7 +9,11 @@ const NotificationsPage = () => {
   }, [pathname]);
 
   return (
-    <div className="w-full h-screen flex-col space-y-5">NotificationsPage</div>
+    <div className="w-full min-h-screen space-y-5">
+      <div className="bg-card w-full shadow-sm h-[2.7rem] px-5 flex items-center justify-center rounded-2xl font-semibold text-center">
+        Notifications
+      </div>
+    </div>
   );
 };
 

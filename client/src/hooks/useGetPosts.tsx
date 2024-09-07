@@ -24,9 +24,20 @@ const useGetPosts = (feedType: string) => {
           const data: PostsPage = await res.json();
 
           return data;
+        } else if (feedType === "following") {
+          const res = await fetch(
+            `/api/posts/get-following${pageParam ? `?cursor=${pageParam}` : ""}`
+          );
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Error fetching posts");
+          }
+          const data: PostsPage = await res.json();
+
+          return data;
         } else {
           const res = await fetch(
-            `/api/posts/get/following${pageParam ? `?cursor=${pageParam}` : ""}`
+            `/api/posts/get-bookmarks${pageParam ? `?cursor=${pageParam}` : ""}`
           );
           if (!res.ok) {
             const errorData = await res.json();

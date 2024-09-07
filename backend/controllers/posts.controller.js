@@ -255,3 +255,37 @@ export const unlikePost = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getBookmarksPosts = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const following = user.following;
+    const pageSize = 3;
+    const cursor = req.query.cursor || null;
+
+    const query = {
+      _id: { $in: user.bookmarks },
+      ...(cursor ? { _id: { $lt: cursor } } : {}),
+    };
+
+    let posts = await Post.find(query)
+      .sort({ createdAt: -1 })
+      .limit(pageSize + 1)
+      .populate("user", "-password");
+
+    const hasNextPage = posts.length > pageSize;
+    const nextCursor = hasNextPage ? posts[pageSize - 1]._id : null;
+
+    if (hasNextPage) {
+      posts = posts.slice(0, pageSize);
+    }
+
+    res.status(200).json({ posts, nextCursor });
+  } catch (error) {
+    console.log("error in getFollowingPosts controller: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
