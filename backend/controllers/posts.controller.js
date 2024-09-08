@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import { Post } from "../models/post.model.js";
 import { Hashtag } from "../models/hashtag.model.js";
+import { Notification } from "../models/notification.model.js";
 import { v2 } from "cloudinary";
 import { extractHashtag } from "../utils/extractHashtag.js";
 
@@ -220,6 +221,17 @@ export const likePost = async (req, res) => {
 
     await User.findByIdAndUpdate(userId, { $push: { likedPosts: postId } });
     await Post.findByIdAndUpdate(postId, { $push: { likes: userId } });
+
+    if (post.user !== user._id) {
+      const notification = new Notification({
+        from: user._id,
+        to: post.user,
+        content: post.text,
+        type: "like",
+      });
+      await notification.save();
+    }
+
     return res
       .status(200)
       .json({ message: "Post liked successfully", post: post });

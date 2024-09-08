@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { Notification } from "../models/notification.model.js";
 import { v2 } from "cloudinary";
 import bcrypt from "bcryptjs";
 
@@ -54,6 +55,15 @@ export const followUser = async (req, res) => {
     { _id: userId },
     { $push: { following: userToFollowId } }
   );
+
+  if (userToFollowId !== user._id) {
+    const notification = new Notification({
+      from: user._id,
+      to: userToFollowId,
+      type: "follow",
+    });
+    await notification.save();
+  }
 
   res
     .status(200)

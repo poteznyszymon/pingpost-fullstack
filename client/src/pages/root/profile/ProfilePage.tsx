@@ -142,7 +142,7 @@ const ProfilePage = () => {
                 <Button onClick={() => {
                   setProfileImg(null)
                   setCoverImg(null)
-                }} variant={"outline"}>Cancel</Button>
+                }} variant={"secondary"}>Cancel</Button>
                 <LoadingButton
                   loading={isPending}
                   onClick={async () => {

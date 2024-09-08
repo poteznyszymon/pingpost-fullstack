@@ -24,6 +24,15 @@ export interface Post {
   createdAt: string;
 }
 
+export interface Notification {
+  _id: string;
+  from: User;
+  to: User;
+  content: string;
+  read: boolean;
+  type: "like" | "follow" | "comment";
+}
+
 export interface Hashtag {
   _id: string;
   tag: string;

@@ -7,9 +7,10 @@ import { Link } from "react-router-dom";
 
 interface MenuBarProps {
   className?: string;
+  newNotifications: boolean | undefined;
 }
 
-export default function MenuBar({ className }: MenuBarProps) {
+export default function MenuBar({ className, newNotifications }: MenuBarProps) {
   const { data } = useQuery<User>({ queryKey: ["authUser"] });
 
   return (
@@ -32,7 +33,15 @@ export default function MenuBar({ className }: MenuBarProps) {
         asChild
       >
         <Link to="/notifications">
-          <Bell />
+          <div className="relative">
+            <Bell />
+            {newNotifications && (
+              <div className="bg-card size-2 absolute rounded-full top-0 right-1">
+                <div className=" bg-primary size-2 rounded-full" />
+              </div>
+            )}
+          </div>
+
           <span className="hidden lg:inline">Notifications</span>
         </Link>
       </Button>
