@@ -17,7 +17,7 @@ const useUnlikePost = (feedType: string) => {
   const { mutate: unlikePost } = useMutation({
     mutationFn: async (postId: string) => {
       try {
-        const res = await fetch(`api/posts/unlike/${postId}`, {
+        const res = await fetch(`/api/posts/unlike/${postId}`, {
           method: "POST",
         });
         const data = await res.json();

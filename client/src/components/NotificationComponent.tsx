@@ -1,6 +1,6 @@
 import UserAvatar from "./UserAvatar";
 import { Notification } from "@/lib/types";
-import { Heart, User } from "lucide-react";
+import { Bookmark, Heart, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface NotificationComponentProps {
@@ -19,6 +19,9 @@ export const NotificationComponent = ({
         {notification.type === "follow" && (
           <User className="size-6 fill-primary text-primary" />
         )}
+        {notification.type === "bookmarks" && (
+          <Bookmark className="size-6 fill-primary text-primary" />
+        )}
       </div>
       <div className="flex-1 flex flex-col gap-5">
         <div className="flex gap-3 items-center">
@@ -33,10 +36,13 @@ export const NotificationComponent = ({
             {notification.type === "like" && <p>liked your post</p>}
             {notification.type === "follow" && <p>followed you</p>}
             {notification.type === "comment" && <p>commented your post</p>}
-
+            {notification.type === "bookmarks" && (
+              <p>added your post to bookmarks</p>
+            )}
           </div>
         </div>
-        {notification.type === "like" && (
+        {(notification.type === "like" ||
+          notification.type === "bookmarks") && (
           <div className="text-muted-foreground">{notification.content}</div>
         )}
       </div>

@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
 import LoadingButton from "@/components/LoadingButton";
 import useEditUserData from "@/hooks/useEditUserData";
+import Posts from "@/components/Posts";
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -79,7 +80,7 @@ const ProfilePage = () => {
     );
 
   return (
-    <div className="w-full min-h-screen flex-col ">
+    <div className="w-full min-h-screen flex-col space-y-5">
       <div className="bg-card w-full rounded-2xl shadow-sm p-5 relative flex flex-col gap-4">
         <div className="h-48 w-full bg-background rounded-2xl relative shadow-sm group/coverImg">
           {(coverImg || user?.coverImg) && (
@@ -139,10 +140,15 @@ const ProfilePage = () => {
           <div className="flex items-center gap-3">
             {isMyProfile && (profileImg || coverImg) && (
               <div className="flex items-center gap-3">
-                <Button onClick={() => {
-                  setProfileImg(null)
-                  setCoverImg(null)
-                }} variant={"secondary"}>Cancel</Button>
+                <Button
+                  onClick={() => {
+                    setProfileImg(null);
+                    setCoverImg(null);
+                  }}
+                  variant={"secondary"}
+                >
+                  Cancel
+                </Button>
                 <LoadingButton
                   loading={isPending}
                   onClick={async () => {
@@ -182,6 +188,10 @@ const ProfilePage = () => {
           </>
         )}
       </div>
+      <div className="bg-card rounded-2xl shadow-sm h-[2.7rem] flex items-center justify-center">
+        {username}'s posts
+      </div>
+      <Posts feedType="user" username={username} />
     </div>
   );
 };

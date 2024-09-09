@@ -18,7 +18,7 @@ const WhoToFollow = ({
   if (suggestedUsers.length > 0)
     return (
       <div className="space-y-5 rounded-2xl bg-card p-[1.1rem] shadow-sm ">
-        <h1 className="text-xl font-bold">Who to follow</h1>
+        <h1 className="text-lg font-semibold">Who to follow</h1>
         {suggestedUsers.map((user) => (
           <UserTile user={user} key={user._id} />
         ))}

@@ -1,7 +1,7 @@
 import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useGetPosts = (feedType: string) => {
+const useGetPosts = (feedType: string, tag?: string, username?: string) => {
   const {
     data,
     fetchNextPage,
@@ -35,10 +35,34 @@ const useGetPosts = (feedType: string) => {
           const data: PostsPage = await res.json();
 
           return data;
-        } else {
+        } else if (feedType === "bookmarks") {
           const res = await fetch(
             `/api/posts/get-bookmarks${pageParam ? `?cursor=${pageParam}` : ""}`
           );
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Error fetching posts");
+          }
+          const data: PostsPage = await res.json();
+
+          return data;
+        } else if (feedType === "hashtag") {
+          const res = await fetch(
+            `/api/posts/get/${tag}${pageParam ? `?cursor=${pageParam}` : ""}`
+          );
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Error fetching posts");
+          }
+          const data: PostsPage = await res.json();
+
+          return data;
+        } else {
+          const res = await fetch(
+            `/api/posts/get/user/${username}${pageParam ? `?cursor=${pageParam}` : ""}`
+          );
+
           if (!res.ok) {
             const errorData = await res.json();
             throw new Error(errorData.error || "Error fetching posts");

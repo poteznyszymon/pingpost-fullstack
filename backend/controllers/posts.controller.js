@@ -169,6 +169,17 @@ export const addPostToBookmarks = async (req, res) => {
       return res.status(400).json({ error: "Post already added to bookmarks" });
 
     await User.findByIdAndUpdate(userId, { $push: { bookmarks: postId } });
+
+    if (post.user !== user._id) {
+      const notification = new Notification({
+        to: post.user,
+        from: user._id,
+        content: post.text,
+        type: "bookmarks",
+      });
+      await notification.save();
+    }
+
     return res
       .status(200)
       .json({ message: "Post added to bookmarks successfully", post: post });
@@ -274,7 +285,6 @@ export const getBookmarksPosts = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const following = user.following;
     const pageSize = 3;
     const cursor = req.query.cursor || null;
 
@@ -298,6 +308,79 @@ export const getBookmarksPosts = async (req, res) => {
     res.status(200).json({ posts, nextCursor });
   } catch (error) {
     console.log("error in getFollowingPosts controller: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getPostByTag = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const { tag } = req.params;
+    const regex = new RegExp(`#${tag}`, "i");
+
+    const pageSize = 3;
+    const cursor = req.query.cursor || null;
+    const query = {
+      text: { $regex: regex },
+      ...(cursor ? { _id: { $lt: cursor } } : {}),
+    };
+
+    const posts = await Post.find(query)
+      .sort({ createdAt: -1 })
+      .limit(pageSize + 1)
+      .populate("user", "-password");
+
+    const hasNextPage = posts.length > pageSize;
+    const nextCursor = hasNextPage ? posts[pageSize - 1]._id : null;
+
+    if (hasNextPage) {
+      posts = posts.slice(0, pageSize);
+    }
+
+    res.status(200).json({ posts, nextCursor });
+  } catch (error) {
+    console.log("error in getPostByTag controller: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getUserPosts = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const username = req.params.username;
+
+    const loggedUser = await User.findById(userId);
+    const user = await User.findOne({ username });
+
+    if (!loggedUser || !user)
+      return res.status(404).json({ error: "User not found" });
+
+    const pageSize = 3;
+    const cursor = req.query.cursor || null;
+
+    const query = {
+      user: user._id,
+      ...(cursor ? { _id: { $lt: cursor } } : {}),
+    };
+
+    let posts = await Post.find(query)
+      .sort({ createdAt: -1 })
+      .limit(pageSize + 1)
+      .populate("user", "-password");
+
+    const hasNextPage = posts.length > pageSize;
+    const nextCursor = hasNextPage ? posts[pageSize - 1]._id : null;
+
+    if (hasNextPage) {
+      posts = posts.slice(0, pageSize);
+    }
+
+    res.status(200).json({ posts, nextCursor });
+  } catch (error) {
+    console.log("error in getUserPosts controller: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

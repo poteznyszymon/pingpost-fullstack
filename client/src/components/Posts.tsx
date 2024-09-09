@@ -5,12 +5,14 @@ import InfiniteScrollBox from "./InfiniteScrollBox";
 import { Loader2 } from "lucide-react";
 
 interface PostsProps {
-  feedType: "for-you" | "following" | "bookmarks";
+  feedType: "for-you" | "following" | "bookmarks" | "hashtag" | "user";
+  tag?: string;
+  username?: string;
 }
 
-const Posts = ({ feedType }: PostsProps) => {
+const Posts = ({ feedType, tag, username }: PostsProps) => {
   const { data, isFetching, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useGetPosts(feedType);
+    useGetPosts(feedType, tag, username);
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   if (posts?.length === 0 && !isFetching)

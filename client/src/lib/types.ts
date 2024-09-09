@@ -30,7 +30,7 @@ export interface Notification {
   to: User;
   content: string;
   read: boolean;
-  type: "like" | "follow" | "comment";
+  type: "like" | "follow" | "comment" | "bookmarks";
 }
 
 export interface Hashtag {

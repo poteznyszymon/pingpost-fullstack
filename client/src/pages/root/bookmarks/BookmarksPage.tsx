@@ -11,7 +11,7 @@ const BookmarksPage = () => {
 
   return (
     <div className="w-full min-h-screen space-y-5">
-      <div className="bg-card w-full shadow-sm h-[2.7rem] px-5 flex items-center justify-center rounded-2xl font-semibold text-center">
+      <div className="bg-card w-full shadow-sm h-[2.7rem] px-5 flex items-center justify-center rounded-2xl text-center">
         Bookmarks
       </div>
       <Posts feedType={"bookmarks"} />

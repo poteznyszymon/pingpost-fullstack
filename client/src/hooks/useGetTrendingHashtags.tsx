@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 const useGetTrendingHashtag = () => {
   const { data: trendingHashtags, isLoading } = useQuery<Hashtag[]>({
     queryKey: ["trendingHashtags"],
+    refetchInterval: 1000 * 60,
     queryFn: async () => {
       try {
         const res = await fetch("/api/hashtags/trending");

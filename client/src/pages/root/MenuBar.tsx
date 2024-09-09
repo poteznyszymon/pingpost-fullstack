@@ -22,8 +22,8 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
         asChild
       >
         <Link to="/">
-          <Home />
-          <span className="hidden lg:inline">Home</span>
+          <Home strokeWidth={1.2}/>
+          <span className="hidden lg:inline font-normal">Home</span>
         </Link>
       </Button>
       <Button
@@ -34,7 +34,7 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
       >
         <Link to="/notifications">
           <div className="relative">
-            <Bell />
+            <Bell strokeWidth={1.2}/>
             {newNotifications && (
               <div className="bg-card size-2 absolute rounded-full top-0 right-1">
                 <div className=" bg-primary size-2 rounded-full" />
@@ -42,7 +42,7 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
             )}
           </div>
 
-          <span className="hidden lg:inline">Notifications</span>
+          <span className="hidden lg:inline font-normal">Notifications</span>
         </Link>
       </Button>
       <Button
@@ -52,8 +52,8 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
         asChild
       >
         <Link to="/bookmarks">
-          <Bookmark />
-          <span className="hidden lg:inline">Bookmarks</span>
+          <Bookmark strokeWidth={1.2}/>
+          <span className="hidden lg:inline font-normal">Bookmarks</span>
         </Link>
       </Button>
       <Button
@@ -63,8 +63,8 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
         asChild
       >
         <Link to={`/profile/${data?.username}`}>
-          <UserIcon />
-          <span className="hidden lg:inline">Profile</span>
+          <UserIcon strokeWidth={1.2}/>
+          <span className="hidden lg:inline font-normal">Profile</span>
         </Link>
       </Button>
     </div>

@@ -125,6 +125,7 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
               }
             >
               <Heart
+                strokeWidth={1.5}
                 className={`size-5 group-hover/likes:text-primary  ${isLiked ? "fill-primary text-primary" : ""}`}
               />
             </div>
@@ -133,7 +134,10 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
             </p>
           </div>
           <div className="flex gap-2 items-center">
-            <MessageCircle className="size-5 cursor-pointer" />
+            <MessageCircle
+              strokeWidth={1.5}
+              className="size-5 cursor-pointer"
+            />
             <p className="text-xs font-semibold">
               {post.comments.length} comments
             </p>
@@ -145,6 +149,7 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
           onClick={handleBookmarksClick}
         >
           <Bookmark
+            strokeWidth={1.5}
             className={`size-5 group-hover/bookmarks:text-primary  ${inBookmarks ? "fill-primary text-primary" : ""}`}
           />
         </div>

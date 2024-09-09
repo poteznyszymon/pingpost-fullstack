@@ -17,7 +17,7 @@ const useLikePost = (feedType: string) => {
   const { mutate: likePost } = useMutation({
     mutationFn: async (postId: string) => {
       try {
-        const res = await fetch(`api/posts/like/${postId}`, {
+        const res = await fetch(`/api/posts/like/${postId}`, {
           method: "POST",
         });
         const data = await res.json();
