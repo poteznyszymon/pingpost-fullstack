@@ -8,9 +8,14 @@ import { Link } from "react-router-dom";
 interface MenuBarProps {
   className?: string;
   newNotifications: boolean | undefined;
+  count: number;
 }
 
-export default function MenuBar({ className, newNotifications }: MenuBarProps) {
+export default function MenuBar({
+  className,
+  newNotifications,
+  count,
+}: MenuBarProps) {
   const { data } = useQuery<User>({ queryKey: ["authUser"] });
 
   return (
@@ -22,7 +27,7 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
         asChild
       >
         <Link to="/">
-          <Home strokeWidth={1.2}/>
+          <Home strokeWidth={1.2} />
           <span className="hidden lg:inline font-normal">Home</span>
         </Link>
       </Button>
@@ -34,11 +39,11 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
       >
         <Link to="/notifications">
           <div className="relative">
-            <Bell strokeWidth={1.2}/>
+            <Bell strokeWidth={1.2} />
             {newNotifications && (
-              <div className="bg-card size-2 absolute rounded-full top-0 right-1">
-                <div className=" bg-primary size-2 rounded-full" />
-              </div>
+              <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-xs font-medium tabular-nums text-primary-foreground">
+                {count}
+              </span>
             )}
           </div>
 
@@ -52,7 +57,7 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
         asChild
       >
         <Link to="/bookmarks">
-          <Bookmark strokeWidth={1.2}/>
+          <Bookmark strokeWidth={1.2} />
           <span className="hidden lg:inline font-normal">Bookmarks</span>
         </Link>
       </Button>
@@ -63,7 +68,7 @@ export default function MenuBar({ className, newNotifications }: MenuBarProps) {
         asChild
       >
         <Link to={`/profile/${data?.username}`}>
-          <UserIcon strokeWidth={1.2}/>
+          <UserIcon strokeWidth={1.2} />
           <span className="hidden lg:inline font-normal">Profile</span>
         </Link>
       </Button>

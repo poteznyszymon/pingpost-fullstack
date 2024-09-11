@@ -7,12 +7,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { User } from "@/lib/types";
+import {
+  regiserValues,
+  updateUserSchema,
+  updateUserValues,
+} from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const EditProfileDialog = ({ user }: { user: User }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -20,14 +34,14 @@ const EditProfileDialog = ({ user }: { user: User }) => {
   const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (values: regiserValues) => {
       try {
         const res = await fetch("/api/users/edit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(values),
         });
         const data = await res.json();
         if (!res.ok) {
@@ -51,47 +65,33 @@ const EditProfileDialog = ({ user }: { user: User }) => {
     },
   });
 
-  const [formData, setFormData] = useState({
-    displayName: "",
-    email: "",
-    newPassword: "",
-    currentPassword: "",
-    bio: "",
+  const form = useForm<updateUserValues>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      displayName: user.displayName || "",
+      email: user.email || "",
+      password: "",
+      newPassword: "",
+      bio: user.bio || "",
+    },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    if (openDialog) {
+      form.setValue("displayName", user.displayName || "");
+      form.setValue("email", user.email || "");
+      form.setValue("bio", user.bio || "");
+    }
+  }, [openDialog, user, form]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutate();
+  const onSubmit = (values: regiserValues) => {
+    mutate(values);
   };
 
   const handleClose = () => {
-    setFormData({
-      displayName: "",
-      email: "",
-      bio: "",
-      newPassword: "",
-      currentPassword: "",
-    });
+    form.reset();
     setOpenDialog(false);
   };
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        displayName: user.displayName || "",
-        email: user.email || "",
-        bio: user.bio || "",
-        newPassword: "",
-        currentPassword: "",
-      });
-    }
-  }, [user, openDialog]);
 
   return (
     <Dialog open={openDialog}>
@@ -106,47 +106,85 @@ const EditProfileDialog = ({ user }: { user: User }) => {
       >
         {" "}
         <DialogHeader>
-          <DialogTitle>Edit you profile</DialogTitle>
+          <DialogTitle>Edit your profile</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-3">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2">
-              <Input
-                name="displayName"
-                placeholder="display name"
-                value={formData.displayName}
-                onChange={handleChange}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2">
+                <FormField
+                  control={form.control}
+                  name="displayName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Display Name" {...field} />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Email" {...field} />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="current password"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="new password"
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="bio"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea placeholder="Bio" {...field} />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
               />
-              <Input
-                type="email"
-                name="email"
-                placeholder="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <Input
-                name="currentPassword"
-                placeholder="current password"
-                value={formData.currentPassword}
-                onChange={handleChange}
-              />
-              <Input
-                name="newPassword"
-                placeholder="new password"
-                value={formData.newPassword}
-                onChange={handleChange}
-              />
+              <LoadingButton loading={isPending}>Save</LoadingButton>
             </div>
-            <Textarea
-              name="bio"
-              placeholder="bio"
-              className="max-h-32"
-              value={formData.bio}
-              onChange={handleChange}
-            />
-            <LoadingButton loading={isPending}>Save</LoadingButton>
-          </div>
-        </form>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

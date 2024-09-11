@@ -1,7 +1,7 @@
 import { Post, User } from "@/lib/types";
 import UserAvatar from "./UserAvatar";
 import { Link } from "react-router-dom";
-import { Bookmark, Heart, MessageCircle, X } from "lucide-react";
+import { Bookmark, Heart, MessageCircle, SendHorizonal, X } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { formatRelativeDate } from "@/lib/formatDate";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ import useAddToBookmarks from "@/hooks/useAddToBookmarks";
 import useDeleteFromBookmarks from "@/hooks/useDeleteFromBookmarks";
 import useLikePost from "@/hooks/useLikePost";
 import useUnlikePost from "@/hooks/useUnlikePost";
+import { Input } from "./ui/input";
 
 interface PostComponentsProps {
   post: Post;
@@ -45,6 +46,7 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
   const inBookmarks = user?.bookmarks.includes(post._id);
   const isLiked = user?.likedPosts.includes(post._id);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openComment, setOpenComment] = useState(false);
 
   const handleBookmarksClick = () => {
     if (!isAdding && !isDeleting) {
@@ -133,10 +135,14 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
               {post.likes.length} {post.likes.length === 1 ? "like" : "likes"}
             </p>
           </div>
-          <div className="flex gap-2 items-center">
+          <div
+            title={openComment ? "Hide comments" : "Show comments"}
+            className="flex gap-2 items-center"
+          >
             <MessageCircle
+              onClick={() => setOpenComment(!openComment)}
               strokeWidth={1.5}
-              className="size-5 cursor-pointer"
+              className="size-5 cursor-pointer hover:text-primary"
             />
             <p className="text-xs font-semibold">
               {post.comments.length} comments
@@ -154,6 +160,19 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
           />
         </div>
       </div>
+      {openComment && (
+        <div>
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Write a comment"
+              className="rounded-2xl text-sm"
+            />
+            <Button title="send comment" variant={"secondary"} className="rounded-2xl">
+              <SendHorizonal className="size-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

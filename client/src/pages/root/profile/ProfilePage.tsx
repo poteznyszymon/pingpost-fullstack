@@ -139,25 +139,14 @@ const ProfilePage = () => {
           </div>
           <div className="flex items-center gap-3">
             {isMyProfile && (profileImg || coverImg) && (
-              <div className="flex items-center gap-3">
-                <Button
-                  onClick={() => {
-                    setProfileImg(null);
-                    setCoverImg(null);
-                  }}
-                  variant={"secondary"}
-                >
-                  Cancel
-                </Button>
-                <LoadingButton
-                  loading={isPending}
-                  onClick={async () => {
-                    mutate({ coverImg, profileImg });
-                  }}
-                >
-                  Save
-                </LoadingButton>
-              </div>
+              <LoadingButton
+                loading={isPending}
+                onClick={async () => {
+                  mutate({ coverImg, profileImg });
+                }}
+              >
+                Save
+              </LoadingButton>
             )}
             {isMyProfile && user ? (
               <EditProfileDialog user={user} />

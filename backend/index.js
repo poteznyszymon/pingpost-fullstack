@@ -7,6 +7,7 @@ import usersRoute from "./routes/users.route.js";
 import postsRoute from "./routes/posts.route.js";
 import hashtagRoute from "./routes/hashtag.route.js";
 import notificationsRoute from "./routes/notifications.route.js";
+import commentsRoute from "./routes/comments.route.js";
 
 import { connectDatabse } from "./db/connectDatabse.js";
 
@@ -31,6 +32,7 @@ app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
 app.use("/api/hashtags", hashtagRoute);
 app.use("/api/notifications", notificationsRoute);
+app.use("/api/comments", commentsRoute);
 
 app.listen(PORT, () => {
   console.log("server running on port:", PORT);

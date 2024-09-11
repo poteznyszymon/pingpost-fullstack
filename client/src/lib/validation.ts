@@ -26,3 +26,15 @@ export const createPostSchema = z.object({
 });
 
 export type createPostValues = z.infer<typeof createPostSchema>;
+
+export const updateUserSchema = z.object({
+  displayName: z
+    .string()
+    .max(9, { message: "displayname must be below 9 characters long" }),
+  email: z.string().email(),
+  password: z.string(),
+  newPassword: z.string(),
+  bio: z.string(),
+});
+
+export type updateUserValues = z.infer<typeof updateUserSchema>;
