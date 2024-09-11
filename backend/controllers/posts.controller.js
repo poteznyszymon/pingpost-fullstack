@@ -63,7 +63,8 @@ export const getAllPosts = async (req, res) => {
     let posts = await Post.find(query)
       .sort({ createdAt: -1 })
       .limit(pageSize + 1)
-      .populate("user", "-password");
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
 
     const hasNextPage = posts.length > pageSize;
     const nextCursor = hasNextPage ? posts[pageSize - 1]._id : null;

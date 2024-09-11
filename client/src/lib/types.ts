@@ -20,7 +20,7 @@ export interface Post {
   img: string | null;
   user: User;
   likes: string[];
-  comments: string[];
+  comments: Comment[];
   createdAt: string;
 }
 
@@ -61,4 +61,11 @@ export interface editUserData {
   bio?: "";
   profileImg?: string | null;
   coverImg?: string | null;
+}
+
+export interface Comment {
+  _id: string;
+  user: User;
+  text: string;
+  createdAt: string;
 }

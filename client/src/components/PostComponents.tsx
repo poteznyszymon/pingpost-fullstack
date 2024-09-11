@@ -1,7 +1,7 @@
 import { Post, User } from "@/lib/types";
 import UserAvatar from "./UserAvatar";
 import { Link } from "react-router-dom";
-import { Bookmark, Heart, MessageCircle, SendHorizonal, X } from "lucide-react";
+import { Bookmark, Heart, MessageCircle, X } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { formatRelativeDate } from "@/lib/formatDate";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +21,8 @@ import useAddToBookmarks from "@/hooks/useAddToBookmarks";
 import useDeleteFromBookmarks from "@/hooks/useDeleteFromBookmarks";
 import useLikePost from "@/hooks/useLikePost";
 import useUnlikePost from "@/hooks/useUnlikePost";
-import { Input } from "./ui/input";
+import CommentEditor from "./CommentEditor";
+import CommentsComponent from "./CommentsComponent";
 
 interface PostComponentsProps {
   post: Post;
@@ -137,13 +138,16 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
           </div>
           <div
             title={openComment ? "Hide comments" : "Show comments"}
-            className="flex gap-2 items-center"
+            className="flex gap-1 items-center "
           >
-            <MessageCircle
-              onClick={() => setOpenComment(!openComment)}
-              strokeWidth={1.5}
-              className="size-5 cursor-pointer hover:text-primary"
-            />
+            <div className="hover:bg-primary/10 p-1 rounded-full cursor-pointer group/comment">
+              <MessageCircle
+                onClick={() => setOpenComment(!openComment)}
+                strokeWidth={1.5}
+                className="size-5 cursor-pointer group-hover/comment:text-primary"
+              />
+            </div>
+
             <p className="text-xs font-semibold">
               {post.comments.length} comments
             </p>
@@ -161,17 +165,10 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
         </div>
       </div>
       {openComment && (
-        <div>
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="Write a comment"
-              className="rounded-2xl text-sm"
-            />
-            <Button title="send comment" variant={"secondary"} className="rounded-2xl">
-              <SendHorizonal className="size-4" />
-            </Button>
-          </div>
-        </div>
+        <>
+          <CommentEditor />
+          <CommentsComponent post={post} />
+        </>
       )}
     </div>
   );

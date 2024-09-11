@@ -96,7 +96,7 @@ const EditProfileDialog = ({ user }: { user: User }) => {
   return (
     <Dialog open={openDialog}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpenDialog(true)} variant={"secondary"}>
+        <Button onClick={() => setOpenDialog(true)} variant={"secondary"} className="rounded-2xl">
           Edit profile
         </Button>
       </DialogTrigger>
