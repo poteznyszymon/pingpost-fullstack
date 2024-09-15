@@ -169,7 +169,7 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
       {openComment && user && (
         <>
           <CommentEditor postId={post._id} feedType={feedType} />
-          <CommentsComponent post={post} user={user} />
+          <CommentsComponent post={post} user={user} feedType={feedType} />
         </>
       )}
     </div>

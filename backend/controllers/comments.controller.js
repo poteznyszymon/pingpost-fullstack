@@ -57,9 +57,13 @@ export const deleteComment = async (req, res) => {
         .status(403)
         .json({ error: "You cannot delete not your comment" });
 
-    const updatedPost = await Post.findByIdAndUpdate(postId, {
+    await Post.findByIdAndUpdate(postId, {
       $pull: { comments: { _id: commentId } },
     });
+
+    const updatedPost = await Post.findById(postId)
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
 
     return res
       .status(200)

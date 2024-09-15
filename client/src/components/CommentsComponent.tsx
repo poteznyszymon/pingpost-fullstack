@@ -13,14 +13,23 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import LoadingButton from "./LoadingButton";
+import useDeleteComment from "@/hooks/useDeleteComment";
 
 interface CommentsComponentProps {
   user: User;
   post: Post;
+  feedType: string;
 }
 
-const CommentsComponent = ({ post, user }: CommentsComponentProps) => {
+const CommentsComponent = ({
+  post,
+  user,
+  feedType,
+}: CommentsComponentProps) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
+    null
+  );
   const numberOfComments = 2;
   const [cursor, setCursor] = useState(
     Math.max(post.comments.length - numberOfComments, 0)
@@ -28,6 +37,20 @@ const CommentsComponent = ({ post, user }: CommentsComponentProps) => {
   const moreComments = cursor > 0;
 
   const comments = post.comments.slice(cursor, post.comments.length);
+
+  const { deleteComment, isPending } = useDeleteComment(
+    {
+      onSuccess: () => {
+        setOpenDialog(false);
+      },
+    },
+    feedType
+  );
+
+  const handleDeleteClick = (commentId: string) => {
+    setSelectedCommentId(commentId);
+    setOpenDialog(true);
+  };
 
   return (
     <>
@@ -70,10 +93,10 @@ const CommentsComponent = ({ post, user }: CommentsComponentProps) => {
             </div>
           </div>
           {comment.user._id === user._id && (
-            <Dialog open={openDialog}>
+            <Dialog open={openDialog && selectedCommentId === comment._id}>
               <DialogTrigger
                 className="ml-auto"
-                onClick={() => setOpenDialog(true)}
+                onClick={() => handleDeleteClick(comment._id)}
               >
                 <div className="opacity-0 group-hover/comment:opacity-100 transition-all cursor-pointer hover:bg-primary p-1 rounded-full">
                   <X className="size-5" />
@@ -95,10 +118,15 @@ const CommentsComponent = ({ post, user }: CommentsComponentProps) => {
                     Cancel
                   </Button>
                   <LoadingButton
-                    loading={false}
+                    loading={isPending}
                     variant="destructive"
                     className="bg-primary hover:bg-primary/80"
-                    //onClick={() => mutate(post._id || "")}
+                    onClick={() =>
+                      deleteComment({
+                        postId: post._id,
+                        commentId: comment._id,
+                      })
+                    }
                   >
                     Delete
                   </LoadingButton>
