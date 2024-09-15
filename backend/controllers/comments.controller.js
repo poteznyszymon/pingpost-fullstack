@@ -24,11 +24,14 @@ export const createComment = async (req, res) => {
       postId,
       { $push: { comments: comment } },
       { new: true }
-    );
+    )
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
 
-    return res
-      .status(200)
-      .json({ message: "Comment added successfully", post: updatedPost });
+    return res.status(200).json({
+      message: "Comment added successfully",
+      post: updatedPost,
+    });
   } catch (error) {
     console.log("Error in createComment controller: ", error);
     res.status(500).json({ error: "Internal server error" });

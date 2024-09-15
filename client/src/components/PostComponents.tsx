@@ -140,9 +140,11 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
             title={openComment ? "Hide comments" : "Show comments"}
             className="flex gap-1 items-center "
           >
-            <div className="hover:bg-primary/10 p-1 rounded-full cursor-pointer group/comment">
+            <div
+              onClick={() => setOpenComment(!openComment)}
+              className="hover:bg-primary/10 p-1 rounded-full cursor-pointer group/comment"
+            >
               <MessageCircle
-                onClick={() => setOpenComment(!openComment)}
                 strokeWidth={1.5}
                 className="size-5 cursor-pointer group-hover/comment:text-primary"
               />
@@ -164,10 +166,10 @@ const PostComponents = ({ post, feedType }: PostComponentsProps) => {
           />
         </div>
       </div>
-      {openComment && (
+      {openComment && user && (
         <>
-          <CommentEditor />
-          <CommentsComponent post={post} />
+          <CommentEditor postId={post._id} feedType={feedType} />
+          <CommentsComponent post={post} user={user} />
         </>
       )}
     </div>

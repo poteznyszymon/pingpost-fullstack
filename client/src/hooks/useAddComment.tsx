@@ -1,4 +1,3 @@
-import { useToast } from "@/components/ui/use-toast";
 import { Post, PostsPage, User } from "@/lib/types";
 import {
   InfiniteData,
@@ -8,17 +7,23 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-const useLikePost = (feedType: string) => {
-  const { toast } = useToast();
+interface useAddCommentOptions {
+  onSuccess: () => void;
+}
 
+const useAddComment = (options: useAddCommentOptions, feedType: string) => {
   const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
 
-  const { mutate: likePost } = useMutation({
-    mutationFn: async (postId: string) => {
+  const { mutate: addComment, isPending } = useMutation({
+    mutationFn: async ({ postId, text }: { postId: string; text: string }) => {
       try {
-        const res = await fetch(`/api/posts/like/${postId}`, {
+        const res = await fetch(`/api/comments/create/${postId}`, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "something went wrong");
@@ -31,9 +36,6 @@ const useLikePost = (feedType: string) => {
     },
     onSuccess: async (updatedPost: Post) => {
       if (!user) return;
-      user.likedPosts.push(updatedPost._id);
-      queryClient.setQueryData<User>(["authUser"], user);
-      updatedPost.likes.push(user._id);
 
       const queryFilter: QueryFilters = { queryKey: ["posts", `${feedType}`] };
       queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
@@ -54,15 +56,14 @@ const useLikePost = (feedType: string) => {
           };
         }
       );
-    },
-    onError: () => {
-      toast({
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+
+      if (options.onSuccess) {
+        options.onSuccess();
+      }
     },
   });
-  return { likePost };
+
+  return { addComment, isPending };
 };
 
-export default useLikePost;
+export default useAddComment;
