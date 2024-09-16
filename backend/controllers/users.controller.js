@@ -187,3 +187,21 @@ export const editUser = async (req, res) => {
     res.status(500).json({ error: "Interal server error" });
   }
 };
+
+export const searchAll = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { text } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const users = await User.find({
+      username: { $regex: text, $options: "i" },
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    console.log("error in searchAll users: ", error);
+    res.status(500).json({ error: "Interal server error" });
+  }
+};

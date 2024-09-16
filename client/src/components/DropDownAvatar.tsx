@@ -62,7 +62,7 @@ const DropDownAvatar = () => {
       <DropdownMenuContent>
         <DropdownMenuLabel>Logged in as @{user?.username}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link to="">
+        <Link to={`/profile/${user?.username}`}>
           <DropdownMenuItem>
             <UserIcon className="mr-2 size-4" />
             Profile

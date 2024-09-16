@@ -13,7 +13,7 @@ const HashtagPage = () => {
   }, [tag, queryClient]);
 
   return (
-    <div className="w-full h-screen flex-col space-y-5">
+    <div className="w-full min-h-screen flex-col space-y-5">
       <div className="bg-card shadow-sm rounded-2xl px-5 h-[2.7rem] flex items-center justify-center font-semibold">
         #{tag}
       </div>
