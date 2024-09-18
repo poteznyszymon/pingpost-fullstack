@@ -18,6 +18,7 @@
 - auto refreching notifications
 - trending topics
 - editing user data (profile image, cover image, nickname etc.)
+- full mobile responsivity
 
 ### Setup .env file:
 ```
@@ -29,3 +30,10 @@ CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
 ```
+
+### scrennshots
+![1](https://github.com/user-attachments/assets/be8fca4a-d744-4fed-a2e3-5937cf5c0e79)
+![2](https://github.com/user-attachments/assets/06206f58-f810-4ace-9882-244f560f0a2d)
+![3](https://github.com/user-attachments/assets/5096d8fd-08f0-415e-96de-5643ea2632f6)
+![4](https://github.com/user-attachments/assets/93ba578f-be25-4f20-9115-1ce1a14706e1)
+
