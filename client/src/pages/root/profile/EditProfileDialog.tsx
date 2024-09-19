@@ -18,11 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { User } from "@/lib/types";
-import {
-  regiserValues,
-  updateUserSchema,
-  updateUserValues,
-} from "@/lib/validation";
+import { updateUserSchema, updateUserValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -34,7 +30,7 @@ const EditProfileDialog = ({ user }: { user: User }) => {
   const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (values: regiserValues) => {
+    mutationFn: async (values: updateUserValues) => {
       try {
         const res = await fetch("/api/users/edit", {
           method: "POST",
@@ -84,7 +80,7 @@ const EditProfileDialog = ({ user }: { user: User }) => {
     }
   }, [openDialog, user, form]);
 
-  const onSubmit = (values: regiserValues) => {
+  const onSubmit = (values: updateUserValues) => {
     mutate(values);
   };
 
@@ -96,7 +92,11 @@ const EditProfileDialog = ({ user }: { user: User }) => {
   return (
     <Dialog open={openDialog}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpenDialog(true)} variant={"secondary"} className="rounded-2xl">
+        <Button
+          onClick={() => setOpenDialog(true)}
+          variant={"secondary"}
+          className="rounded-2xl"
+        >
           Edit profile
         </Button>
       </DialogTrigger>
@@ -175,7 +175,11 @@ const EditProfileDialog = ({ user }: { user: User }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea placeholder="Bio" {...field} className="max-h-32"/>
+                      <Textarea
+                        placeholder="Bio"
+                        {...field}
+                        className="max-h-32"
+                      />
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>
