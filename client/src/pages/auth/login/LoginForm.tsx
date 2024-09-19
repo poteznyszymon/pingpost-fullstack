@@ -1,5 +1,3 @@
-"use client";
-
 import { InputWithPassword } from "@/components/InputWithPassword";
 import LoadingButton from "@/components/LoadingButton";
 import {
