@@ -175,7 +175,7 @@ const EditProfileDialog = ({ user }: { user: User }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea placeholder="Bio" {...field} />
+                      <Textarea placeholder="Bio" {...field} className="max-h-32"/>
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>

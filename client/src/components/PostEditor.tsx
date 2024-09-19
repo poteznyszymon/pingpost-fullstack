@@ -47,7 +47,7 @@ const PostEditor = () => {
           <UserAvatar avatarUrl={user?.profileImg || ""} className="" />
         </Link>
         <Textarea
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => setText(e.target.value)} 
           value={text}
           className="rounded-2xl px-5 py-2 resize-none h-12"
         />

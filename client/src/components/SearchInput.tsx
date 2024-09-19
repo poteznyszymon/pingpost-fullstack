@@ -1,4 +1,4 @@
-import { SearchIcon } from "lucide-react";
+import { ArrowRight, SearchIcon } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -63,6 +63,7 @@ const SearchInput = () => {
             className="absolute top-12 border w-full bg-background p-5 space-x-5 rounded-2xl"
             onMouseDown={() => setOpenResultsMenu(true)}
           >
+            {!data.length && <p className="text-sm">no results</p>}
             {data.map((user) => (
               <Link
                 onClick={() => {
@@ -81,6 +82,9 @@ const SearchInput = () => {
                     <p className="text-xs text-muted-foreground">
                       @{user.username}
                     </p>
+                  </div>
+                  <div title="go to user profile" className="ml-auto">
+                    <ArrowRight className="size-5 group-hover:text-primary" />
                   </div>
                 </div>
               </Link>

@@ -42,7 +42,8 @@ export const NotificationComponent = ({
           </div>
         </div>
         {(notification.type === "like" ||
-          notification.type === "bookmarks") && (
+          notification.type === "bookmarks" ||
+          notification.type === "comment") && (
           <div className="text-muted-foreground">{notification.content}</div>
         )}
       </div>

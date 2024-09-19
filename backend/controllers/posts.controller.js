@@ -234,7 +234,7 @@ export const likePost = async (req, res) => {
     await User.findByIdAndUpdate(userId, { $push: { likedPosts: postId } });
     await Post.findByIdAndUpdate(postId, { $push: { likes: userId } });
 
-    if (post.user !== user._id) {
+    if (post.user.toString() !== user._id.toString()) {
       const notification = new Notification({
         from: user._id,
         to: post.user,
