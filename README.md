@@ -31,6 +31,16 @@ CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
 ```
 
+### build app
+```
+npm run build
+```
+
+### start app
+```
+npm run start
+```
+
 ### scrennshots
 ![1](https://github.com/user-attachments/assets/be8fca4a-d744-4fed-a2e3-5937cf5c0e79)
 ![2](https://github.com/user-attachments/assets/06206f58-f810-4ace-9882-244f560f0a2d)
