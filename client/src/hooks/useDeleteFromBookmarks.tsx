@@ -1,5 +1,5 @@
 import { useToast } from "@/components/ui/use-toast";
-import { Post, PostsPage, User } from "@/lib/types";
+import { PostsPage, User } from "@/lib/types";
 import {
   InfiniteData,
   useMutation,
@@ -9,7 +9,6 @@ import {
 
 const useDeleteFromBookmarks = () => {
   const { toast } = useToast();
-
   const { data: user, isFetching: isDeleting } = useQuery<User>({
     queryKey: ["authUser"],
   });
@@ -17,51 +16,60 @@ const useDeleteFromBookmarks = () => {
 
   const { mutate: deleteFromBookmarks } = useMutation({
     mutationFn: async (postId: string) => {
-      try {
-        const res = await fetch(`api/posts/delete-from-bookmarks/${postId}`, {
-          method: "POST",
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        return data.post;
-      } catch (error) {
-        const errorMessage =
-          (error as Error).message || "Unknown error occurred";
-        throw new Error(errorMessage);
-      }
+      const res = await fetch(`api/posts/delete-from-bookmarks/${postId}`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "something went wrong");
+      return data.post;
     },
-    onSuccess: async (post: Post) => {
+    onMutate: async (postId: string) => {
       if (!user) return;
 
-      // auth user cache
-      user.bookmarks = user.bookmarks.filter(
-        (postId) => postId !== post._id.toString()
-      );
+      await queryClient.cancelQueries({ queryKey: ["posts", "bookmarks"] });
+
+      const previousUserData = queryClient.getQueryData<User>(["authUser"]);
+
+      user.bookmarks = user.bookmarks.filter((id) => id !== postId);
       queryClient.setQueryData<User>(["authUser"], user);
 
-      // post bookmarks cache
-      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
-        { queryKey: ["posts", "bookmarks"] },
+      const previousBookmarksData = queryClient.getQueryData<
+        InfiniteData<PostsPage>
+      >(["posts", "bookmarks"]);
+      queryClient.setQueryData<InfiniteData<PostsPage>>(
+        ["posts", "bookmarks"],
         (oldData) => {
           if (!oldData) return oldData;
           return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              posts: page.posts.filter((p) => p._id !== post._id),
+              posts: page.posts.filter((p) => p._id !== postId),
             })),
           };
         }
       );
-    },
 
-    onError: () => {
+      return { previousUserData, previousBookmarksData };
+    },
+    onError: (_error, _postId, context) => {
+      if (context?.previousUserData) {
+        queryClient.setQueryData<User>(["authUser"], context.previousUserData);
+      }
+      if (context?.previousBookmarksData) {
+        queryClient.setQueryData<InfiniteData<PostsPage>>(
+          ["posts", "bookmarks"],
+          context.previousBookmarksData
+        );
+      }
+
       toast({
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
     },
   });
+
   return { deleteFromBookmarks, isDeleting };
 };
 

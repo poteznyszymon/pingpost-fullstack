@@ -21,10 +21,10 @@ const useUnlikePost = (feedType: string) => {
       if (!res.ok) throw new Error(data.error || "something went wrong");
       return data.post;
     },
-    onMutate: async (postId: string) => {
+    onMutate: (postId: string) => {
       if (!user) return;
 
-      await queryClient.cancelQueries({ queryKey: ["posts", `${feedType}`] });
+      queryClient.cancelQueries({ queryKey: ["posts", `${feedType}`] });
 
       const previousPosts = queryClient.getQueryData<InfiniteData<PostsPage>>([
         "posts",
