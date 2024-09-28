@@ -2,7 +2,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { Post, PostsPage, User } from "@/lib/types";
 import {
   InfiniteData,
-  QueryFilters,
   useMutation,
   useQuery,
   useQueryClient,
@@ -10,62 +9,69 @@ import {
 
 const useUnlikePost = (feedType: string) => {
   const { toast } = useToast();
-
   const { data: user } = useQuery<User>({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
 
   const { mutate: unlikePost } = useMutation({
     mutationFn: async (postId: string) => {
-      try {
-        const res = await fetch(`/api/posts/unlike/${postId}`, {
-          method: "POST",
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        return data.post;
-      } catch (error) {
-        const errorMessage =
-          (error as Error).message || "Unknown error occurred";
-        throw new Error(errorMessage);
-      }
+      const res = await fetch(`/api/posts/unlike/${postId}`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "something went wrong");
+      return data.post;
     },
-    onSuccess: async (updatedPost: Post) => {
+    onMutate: async (postId: string) => {
       if (!user) return;
-      user.likedPosts = user.likedPosts.filter(
-        (postId) => postId !== updatedPost._id.toString()
-      );
+
+      await queryClient.cancelQueries({ queryKey: ["posts", `${feedType}`] });
+
+      const previousPosts = queryClient.getQueryData<InfiniteData<PostsPage>>([
+        "posts",
+        `${feedType}`,
+      ]);
+
+      user.likedPosts = user.likedPosts.filter((id) => id !== postId);
       queryClient.setQueryData<User>(["authUser"], user);
 
-      updatedPost.likes = updatedPost.likes.filter(
-        (userId) => userId !== user._id
-      );
-      const queryFilter: QueryFilters = { queryKey: ["posts", `${feedType}`] };
-      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
-        queryFilter,
+      const optimisticUpdate = (post: Post) => ({
+        ...post,
+        likes: post.likes.filter((userId) => userId !== user._id),
+      });
+
+      queryClient.setQueryData<InfiniteData<PostsPage>>(
+        ["posts", `${feedType}`],
         (oldData) => {
           if (!oldData) return oldData;
           return {
-            pageParams: oldData.pageParams,
+            ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              posts: page.posts.map((p) => {
-                if (p._id === updatedPost._id) {
-                  return updatedPost;
-                }
-                return p;
-              }),
+              posts: page.posts.map((post) =>
+                post._id === postId ? optimisticUpdate(post) : post
+              ),
             })),
           };
         }
       );
+
+      return { previousPosts };
     },
-    onError: () => {
+    onError: (_error, _postId, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(
+          ["posts", `${feedType}`],
+          context.previousPosts
+        );
+      }
+
       toast({
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
     },
   });
+
   return { unlikePost };
 };
 
